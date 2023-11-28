@@ -50,8 +50,10 @@ public class MqttIn extends InputOutputNode {
             }
 
             client.subscribe(topicFilter, (topic, msg) -> {
-                message.setPayload(msg.toString());
-                output(message);
+                if (!topic.contains("will")) {
+                    message.setPayload(msg.toString());
+                    output(message);
+                }
             });
 
             while (!Thread.currentThread().isInterrupted()) {
