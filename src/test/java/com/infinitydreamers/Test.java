@@ -6,10 +6,12 @@ public class Test {
         JsonNode json = new JsonNode();
         DeviceInfoNode deviceInfo = new DeviceInfoNode();
         TopicNode topicNode = new TopicNode();
+        SensorNode sensorNode = new SensorNode();
 
         Wire wire1 = new Wire();
         Wire wire2 = new Wire();
         Wire wire3 = new Wire();
+        Wire wire4 = new Wire();
 
         in.connectOutputWire(wire1);
         json.connectInputWire(wire1);
@@ -17,10 +19,13 @@ public class Test {
         deviceInfo.connectInputWire(wire2);
         deviceInfo.connectOutputWire(wire3);
         topicNode.connectInputWire(wire3);
+        topicNode.connectOutputWire(wire4);
+        sensorNode.connectInputWire(wire4);
 
         in.start();
         json.start();
         deviceInfo.start();
         topicNode.start();
+        sensorNode.start();
     }
 }
