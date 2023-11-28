@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 public class Message {
     JSONObject json;
-    String payload;
+    String data;
     String sensor;
 
     Message() {
@@ -15,16 +15,16 @@ public class Message {
         this.json = json;
     }
 
-    Message(String payload) {
-        this.payload = payload;
+    Message(String data) {
+        this.data = data;
     }
 
     public JSONObject getJson() {
         return json;
     }
 
-    public String getPayload() {
-        return payload;
+    public String getData() {
+        return data;
     }
 
     public String getSensor() {
@@ -35,8 +35,8 @@ public class Message {
         this.json = json;
     }
 
-    public void setPayload(String payload) {
-        this.payload = payload;
+    public void setData(String data) {
+        this.data = data;
     }
 
     public void setSensor(String sensor) {
