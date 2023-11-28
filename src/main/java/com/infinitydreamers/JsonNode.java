@@ -3,6 +3,7 @@ package com.infinitydreamers;
 import org.json.JSONObject;
 
 public class JsonNode extends InputOutputNode {
+
     @Override
     void process() {
         if ((getInputWire(0) != null) && getInputWire(0).hasMessage()) {
