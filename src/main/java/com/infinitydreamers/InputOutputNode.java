@@ -43,11 +43,11 @@ public class InputOutputNode extends ActiveNode {
         return outputWires.size();
     }
 
-    public List<Wire> getInputWire() {
-        return inputWires;
+    public Wire getInputWire(int index) {
+        return inputWires.get(index);
     }
 
-    public List<Wire> getOutputWire() {
-        return outputWires;
+    public Wire getOutputWire(int index) {
+        return outputWires.get(index);
     }
 }
