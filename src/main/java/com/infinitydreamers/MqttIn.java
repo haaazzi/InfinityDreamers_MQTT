@@ -12,7 +12,14 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 public class MqttIn extends InputOutputNode {
-    public static void main(String[] args) throws InterruptedException {
+    String[] args;
+
+    public MqttIn(String[] args) {
+        this.args = args;
+    }
+
+    @Override
+    void process() {
         String publisherId = UUID.randomUUID().toString();
 
         Options options = new Options();
@@ -38,8 +45,13 @@ public class MqttIn extends InputOutputNode {
                 message.setSensor(sensor);
             }
 
+            if (topicFilter.equals("")) {
+                topicFilter = "application/#";
+            }
+
             client.subscribe(topicFilter, (topic, msg) -> {
                 message.setPayload(msg.toString());
+                output(message);
             });
 
             while (!Thread.currentThread().isInterrupted()) {
@@ -48,7 +60,7 @@ public class MqttIn extends InputOutputNode {
 
             client.disconnect();
 
-        } catch (MqttException | ParseException e) {
+        } catch (MqttException | ParseException | InterruptedException e) {
             e.printStackTrace();
         }
     }
