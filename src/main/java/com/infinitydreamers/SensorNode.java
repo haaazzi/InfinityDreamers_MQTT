@@ -10,23 +10,32 @@ public class SensorNode extends InputOutputNode {
             Message message = getInputWire(0).get();
 
             JSONObject data = message.getJson();
-            JSONObject object = (JSONObject)data.get("object"); 
+            JSONObject object = (JSONObject) data.get("object");
             String commonTopic = message.getData();
-            String sensor =  message.getSensor();
+            String sensor = message.getSensor();
             JSONObject newJson = new JSONObject();
             JSONObject payload = new JSONObject();
 
-            for (String key : sensor.split(",")) {
-                newJson = new JSONObject();
-                payload = new JSONObject();
+            if (sensor != null) {
+                for (String key : sensor.split(",")) {
+                    newJson = new JSONObject();
+                    payload = new JSONObject();
 
-                newJson.put("topic", commonTopic + "/e/" + key);
-                payload.put("time", System.currentTimeMillis());
-                payload.put("value", object.get(key));
-                newJson.put("payload", payload);
+                    newJson.put("topic", commonTopic + "/e/" + key);
+                    payload.put("time", System.currentTimeMillis());
+                    payload.put("value", object.get(key));
+                    newJson.put("payload", payload);
+                }
+            } else {
+                for (String key : object.keySet()) {
+                    newJson = new JSONObject();
+                    payload = new JSONObject();
 
-                System.out.println(newJson.toString(4));
-                
+                    newJson.put("topic", commonTopic + "/e/" + key);
+                    payload.put("time", System.currentTimeMillis());
+                    payload.put("value", object.get(key));
+                    newJson.put("payload", payload);
+                }
             }
 
             message.setData(commonTopic);
