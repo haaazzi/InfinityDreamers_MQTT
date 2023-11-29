@@ -6,6 +6,7 @@ public class Message {
     JSONObject json;
     String data;
     String sensor;
+    boolean flag = false;
 
     Message() {
         this("");
@@ -41,6 +42,14 @@ public class Message {
 
     public void setSensor(String sensor) {
         this.sensor = sensor;
+    }
+
+    public boolean isFlag() {
+        return flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
     }
 
 }
