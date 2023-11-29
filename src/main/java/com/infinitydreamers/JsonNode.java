@@ -8,11 +8,15 @@ public class JsonNode extends InputOutputNode {
     void process() {
         if ((getInputWire(0) != null) && getInputWire(0).hasMessage()) {
             Message message = getInputWire(0).get();
-            String payload = message.getData();
-            JSONObject newJson = new JSONObject(payload);
+            if (message.isFlag()) {
 
-            message.setJson(newJson);
-            output(message);
+                String payload = message.getData();
+                JSONObject newJson = new JSONObject(payload);
+
+                message.setFlag(true);
+                message.setJson(newJson);
+                output(message);
+            }
         }
     }
 }
