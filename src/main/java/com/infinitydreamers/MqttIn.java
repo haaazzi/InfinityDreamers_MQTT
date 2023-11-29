@@ -52,7 +52,6 @@ public class MqttIn extends InputOutputNode {
             client.subscribe(topicFilter, (topic, msg) -> {
                 if (!topic.contains("will")) {
                     message.setData(msg.toString());
-                    message.setSensor("temperature,humidity");
                     output(message);
                 }
             });
