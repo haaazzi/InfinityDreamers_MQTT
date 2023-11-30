@@ -80,9 +80,11 @@ public class MqttIn extends InputOutputNode {
 
             client.disconnect();
 
-        } catch (MqttException | ParseException | InterruptedException | IOException
+        } catch (MqttException | ParseException | IOException
                 | org.json.simple.parser.ParseException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 }
