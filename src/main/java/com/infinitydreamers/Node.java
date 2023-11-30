@@ -8,10 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public abstract class Node {
-    public static int count = 0;
-    public UUID id;
-    public String name;
-    public String className = getClass().getSimpleName();
+    static int count = 0;
+    UUID id;
+    String name;
+    String className = getClass().getSimpleName();
 
     Node() {
         this(UuidCreator.getTimeBased());
