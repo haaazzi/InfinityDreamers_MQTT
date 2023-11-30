@@ -17,9 +17,9 @@ public class SensorNode extends InputOutputNode {
                     JSONObject object = (JSONObject) data.get("object");
                     String commonTopic = message.getData();
                     String sensor = message.getSensor();
-                    JSONObject newJson = new JSONObject();
-                    JSONObject payload = new JSONObject();
-                    Message newMessage = new Message();
+                    JSONObject newJson = null;
+                    JSONObject payload = null;
+                    Message newMessage = null;
 
                     if (sensor != null) {
                         for (String key : sensor.split(",")) {
