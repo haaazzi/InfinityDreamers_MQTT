@@ -1,5 +1,7 @@
 package com.infinitydreamers;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.UUID;
 
 import org.apache.commons.cli.CommandLine;
@@ -10,6 +12,8 @@ import org.apache.commons.cli.ParseException;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.*;
 
 public class MqttIn extends InputOutputNode {
     String[] args;
@@ -25,6 +29,7 @@ public class MqttIn extends InputOutputNode {
         Options options = new Options();
         options.addOption("an", "application", true, "application name");
         options.addOption("s", "sensor", true, "sensor");
+        options.addOption("c", "configure", true, "configure");
 
         try (IMqttClient client = new MqttClient("tcp://ems.nhnacademy.com:1883", publisherId)) {
 
@@ -36,6 +41,7 @@ public class MqttIn extends InputOutputNode {
 
             String topicFilter = "";
             String sensor = "";
+            String path = "";
             Message message = new Message();
 
             if (commandLine.hasOption("an")) {
@@ -43,6 +49,15 @@ public class MqttIn extends InputOutputNode {
             } else if (commandLine.hasOption("s")) {
                 sensor = commandLine.getOptionValue("s");
                 message.setSensor(sensor);
+            } else if (commandLine.hasOption("c")) {
+                path = commandLine.getOptionValue("c");
+                JSONParser jsonParser = new JSONParser();
+                Object obj = jsonParser.parse(new FileReader("./" + path));
+                JSONObject jsonObject = (JSONObject) obj;
+
+                topicFilter = (String) jsonObject.get("name");
+                message.setSensor((String) jsonObject.get("sensor"));
+
             }
 
             if (topicFilter.equals("")) {
@@ -65,7 +80,8 @@ public class MqttIn extends InputOutputNode {
 
             client.disconnect();
 
-        } catch (MqttException | ParseException | InterruptedException e) {
+        } catch (MqttException | ParseException | InterruptedException | IOException
+                | org.json.simple.parser.ParseException e) {
             e.printStackTrace();
         }
     }
