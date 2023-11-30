@@ -1,7 +1,8 @@
 package com.infinitydreamers;
 
-public class Test {
+public class Main {
     public static void main(String[] args) {
+
         MqttIn in = new MqttIn(args);
         JsonNode json = new JsonNode();
         DeviceInfoNode deviceInfo = new DeviceInfoNode();
