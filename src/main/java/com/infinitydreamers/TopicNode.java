@@ -26,8 +26,8 @@ public class TopicNode extends InputOutputNode {
                         case "site":
                             commonTopic += "/s/" + info.get(key);
                             break;
-                        case "name":
-                            commonTopic += "/n/" + info.get(key);
+                        case "deviceId":
+                            commonTopic += "/d/" + info.get(key);
                             break;
                         case "branch":
                             commonTopic += "/b/" + info.get(key);
