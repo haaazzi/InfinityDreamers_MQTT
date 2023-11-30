@@ -12,53 +12,57 @@ public class SensorNode extends InputOutputNode {
 
             if (message.isFlag()) {
                 JSONObject data = message.getJson();
+                messageProcessing(data, message);
+            }
+        }
+    }
 
-                if (data.has("object")) {
-                    JSONObject object = (JSONObject) data.get("object");
-                    String commonTopic = message.getData();
-                    String sensor = message.getSensor();
-                    JSONObject newJson = null;
-                    JSONObject payload = null;
-                    Message newMessage = null;
+    void messageProcessing(JSONObject data, Message message) {
 
-                    if (sensor != null) {
-                        for (String key : sensor.split(",")) {
-                            newMessage = new Message();
-                            newJson = new JSONObject();
-                            payload = new JSONObject();
-                            newJson.put("topic", commonTopic + "/e/" + key);
-                            payload.put("time", System.currentTimeMillis());
-                            payload.put("value", object.get(key));
-                            newJson.put("payload", payload);
+        if (data.has("object")) {
+            JSONObject object = (JSONObject) data.get("object");
+            String commonTopic = message.getData();
+            String sensor = message.getSensor();
+            JSONObject newJson = null;
+            JSONObject payload = null;
+            Message newMessage = null;
 
-                            newMessage.setFlag(true);
-                            newMessage.setJson(newJson);
-                            newMessage.setData(commonTopic);
+            if (sensor != null) {
+                for (String key : sensor.split(",")) {
+                    newMessage = new Message();
+                    newJson = new JSONObject();
+                    payload = new JSONObject();
+                    newJson.put("topic", commonTopic + "/e/" + key);
+                    payload.put("time", System.currentTimeMillis());
+                    payload.put("value", object.get(key));
+                    newJson.put("payload", payload);
 
-                            output(newMessage);
-                        }
-                    } else {
-                        for (String key : object.keySet()) {
-                            newMessage = new Message();
-                            newJson = new JSONObject();
-                            payload = new JSONObject();
+                    newMessage.setFlag(true);
+                    newMessage.setJson(newJson);
+                    newMessage.setData(commonTopic);
 
-                            newJson.put("topic", commonTopic + "/e/" + key);
-                            payload.put("time", System.currentTimeMillis());
-                            payload.put("value", object.get(key));
-                            newJson.put("payload", payload);
+                    output(newMessage);
+                }
+            } else {
+                for (String key : object.keySet()) {
+                    newMessage = new Message();
+                    newJson = new JSONObject();
+                    payload = new JSONObject();
 
-                            newMessage.setFlag(true);
-                            newMessage.setJson(newJson);
-                            newMessage.setData(commonTopic);
+                    newJson.put("topic", commonTopic + "/e/" + key);
+                    payload.put("time", System.currentTimeMillis());
+                    payload.put("value", object.get(key));
+                    newJson.put("payload", payload);
 
-                            output(newMessage);
-                        }
-                    }
-                } else {
-                    output(new Message());
+                    newMessage.setFlag(true);
+                    newMessage.setJson(newJson);
+                    newMessage.setData(commonTopic);
+
+                    output(newMessage);
                 }
             }
+        } else {
+            output(new Message());
         }
     }
 }

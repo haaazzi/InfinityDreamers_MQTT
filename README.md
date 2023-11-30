@@ -1,6 +1,7 @@
-구성
+# 구성
 
-MqttIn -> Json -> DeviceInfo -> Topic -> Sensor -> MqttOut
+![img](구성도.png)
+**MqttIn -> Json -> DeviceInfo -> Topic -> Sensor -> MqttOut**
 
 - MqttIn : Mqtt 브로커로 부터 메시지를 받고 Command Line Arguments로 받은 Topic을 설정해서 Message처리
 
@@ -14,3 +15,6 @@ MqttIn -> Json -> DeviceInfo -> Topic -> Sensor -> MqttOut
 
 - MqttOut : 가공된 Message Out(Publish)
 
+## 실행 화면
+### 로그 화면
+![img](로그화면.png)

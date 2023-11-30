@@ -13,7 +13,7 @@ public class TopicNode extends InputOutputNode {
             Message message = getInputWire(0).get();
 
             if (message.isFlag()) {
-                String commonTopic = "data";
+                StringBuilder commonTopic = new StringBuilder("data");
 
                 JSONObject data = message.getJson();
                 JSONObject info = (JSONObject) data.get("deviceInfo");
@@ -24,16 +24,16 @@ public class TopicNode extends InputOutputNode {
                     String key = i.next();
                     switch (key) {
                         case "site":
-                            commonTopic += "/s/" + info.get(key);
+                            commonTopic.append("/s/" + info.get(key));
                             break;
                         case "deviceId":
-                            commonTopic += "/d/" + info.get(key);
+                            commonTopic.append("/d/" + info.get(key));
                             break;
                         case "branch":
-                            commonTopic += "/b/" + info.get(key);
+                            commonTopic.append("/b/" + info.get(key));
                             break;
                         case "place":
-                            commonTopic += "/p/" + info.get(key);
+                            commonTopic.append("/p/" + info.get(key));
                             break;
                         default:
                             break;
@@ -41,7 +41,7 @@ public class TopicNode extends InputOutputNode {
                 }
 
                 message.setFlag(true);
-                message.setData(commonTopic);
+                message.setData(commonTopic.toString());
 
                 output(message);
             }
