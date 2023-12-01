@@ -1,73 +1,39 @@
 package com.infinitydreamers;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.UUID;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.*;
 
 public class MqttIn extends InputOutputNode {
-    String[] args;
+    Message message;
+    final String DEFAULT_TOPIC = "application/#";
+    final String DEFAULT_URI = "tcp://ems.nhnacademy.com:1883";
 
-    public MqttIn(String[] args) {
-        this.args = args;
+    public MqttIn(Message message) {
+        this.message = message;
     }
 
     @Override
     void process() {
         String publisherId = UUID.randomUUID().toString();
+        String uri = message.getJson().has("uri") ? message.getJson().getString("uri") : DEFAULT_URI;
 
-        Options options = new Options();
-        options.addOption("an", "application", true, "application name");
-        options.addOption("s", "sensor", true, "sensor");
-        options.addOption("c", "configure", true, "configure");
-
-        try (IMqttClient client = new MqttClient("tcp://ems.nhnacademy.com:1883", publisherId)) {
+        try (IMqttClient client = new MqttClient(uri, publisherId)) {
 
             client.connect();
-
-            CommandLineParser parser = new DefaultParser();
-            CommandLine commandLine;
-            commandLine = parser.parse(options, args);
-
-            String topicFilter = "";
-            String sensor = "";
-            String path = "";
-            Message message = new Message();
-
-            if (commandLine.hasOption("an")) {
-                topicFilter = commandLine.getOptionValue("an");
-            } else if (commandLine.hasOption("s")) {
-                sensor = commandLine.getOptionValue("s");
-                message.setSensor(sensor);
-            } else if (commandLine.hasOption("c")) {
-                path = commandLine.getOptionValue("c");
-                JSONParser jsonParser = new JSONParser();
-                Object obj = jsonParser.parse(new FileReader("./" + path));
-                JSONObject jsonObject = (JSONObject) obj;
-
-                topicFilter = (String) jsonObject.get("name");
-                message.setSensor((String) jsonObject.get("sensor"));
-
-            }
+            String topicFilter = message.getJson().getString("topic");
+            String sensor = message.getJson().has("sensor") ? message.getJson().getString("sensor") : null;
 
             if (topicFilter.equals("")) {
-                topicFilter = "application/#";
+                topicFilter = DEFAULT_TOPIC;
             }
 
             client.subscribe(topicFilter, (topic, msg) -> {
                 if (!topic.contains("will")) {
                     message.setFlag(true);
-                    message.setData(msg.toString());
+                    message.setSensor(sensor);
+                    message.put("payload", msg.toString());
                     output(message);
                 } else {
                     message.setFlag(false);
@@ -80,8 +46,7 @@ public class MqttIn extends InputOutputNode {
 
             client.disconnect();
 
-        } catch (MqttException | ParseException | IOException
-                | org.json.simple.parser.ParseException e) {
+        } catch (MqttException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
