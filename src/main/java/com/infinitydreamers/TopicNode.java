@@ -12,7 +12,7 @@ public class TopicNode extends InputOutputNode {
 
             Message message = getInputWire(0).get();
 
-            if (message.isFlag()) {
+            if (message.isFlag() && message.getJson().has("payload")) {
                 StringBuilder commonTopic = new StringBuilder("data");
 
                 JSONObject data = new JSONObject(message.getJson().get("payload").toString());
