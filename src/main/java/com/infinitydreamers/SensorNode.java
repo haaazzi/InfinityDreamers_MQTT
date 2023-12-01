@@ -11,7 +11,8 @@ public class SensorNode extends InputOutputNode {
             Message message = getInputWire(0).get();
 
             if (message.isFlag()) {
-                JSONObject data = message.getJson();
+                JSONObject data = new JSONObject(message.getJson().get("payload").toString());
+
                 messageProcessing(data, message);
             }
         }
@@ -21,42 +22,35 @@ public class SensorNode extends InputOutputNode {
 
         if (data.has("object")) {
             JSONObject object = (JSONObject) data.get("object");
-            String commonTopic = message.getData();
-            String sensor = message.getSensor();
-            JSONObject newJson = null;
+            String commonTopic = message.getJson().getString("topic");
+            String sensor = message.getJson().has("sensor") ? message.getJson().getString("sensor") : null;
             JSONObject payload = null;
             Message newMessage = null;
-
             if (sensor != null) {
                 for (String key : sensor.split(",")) {
                     newMessage = new Message();
-                    newJson = new JSONObject();
                     payload = new JSONObject();
-                    newJson.put("topic", commonTopic + "/e/" + key);
+
+                    newMessage.put("topic", commonTopic + "/e/" + key);
                     payload.put("time", System.currentTimeMillis());
                     payload.put("value", object.get(key));
-                    newJson.put("payload", payload);
 
                     newMessage.setFlag(true);
-                    newMessage.setJson(newJson);
-                    newMessage.setData(commonTopic);
+                    newMessage.put("payload", payload.toString());
 
                     output(newMessage);
                 }
             } else {
                 for (String key : object.keySet()) {
                     newMessage = new Message();
-                    newJson = new JSONObject();
                     payload = new JSONObject();
 
-                    newJson.put("topic", commonTopic + "/e/" + key);
+                    newMessage.put("topic", commonTopic + "/e/" + key);
                     payload.put("time", System.currentTimeMillis());
                     payload.put("value", object.get(key));
-                    newJson.put("payload", payload);
 
                     newMessage.setFlag(true);
-                    newMessage.setJson(newJson);
-                    newMessage.setData(commonTopic);
+                    newMessage.put("payload", payload.toString());
 
                     output(newMessage);
                 }

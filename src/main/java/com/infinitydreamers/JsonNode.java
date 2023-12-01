@@ -1,22 +1,22 @@
-package com.infinitydreamers;
+// package com.infinitydreamers;
 
-import org.json.JSONObject;
+// import org.json.JSONObject;
 
-public class JsonNode extends InputOutputNode {
+// public class JsonNode extends InputOutputNode {
 
-    @Override
-    void process() {
-        if ((getInputWire(0) != null) && getInputWire(0).hasMessage()) {
-            Message message = getInputWire(0).get();
-            if (message.isFlag()) {
+// @Override
+// void process() {
+// if ((getInputWire(0) != null) && getInputWire(0).hasMessage()) {
+// Message message = getInputWire(0).get();
+// if (message.isFlag()) {
 
-                String payload = message.getData();
-                JSONObject newJson = new JSONObject(payload);
+// String payload = message.getData();
+// JSONObject newJson = new JSONObject(payload);
 
-                message.setFlag(true);
-                message.setJson(newJson);
-                output(message);
-            }
-        }
-    }
-}
+// message.setFlag(true);
+// message.setJson(newJson);
+// output(message);
+// }
+// }
+// }
+// }

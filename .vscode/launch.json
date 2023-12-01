@@ -6,6 +6,17 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "com.infinitydreamers.Main",
+            "projectName": "mqtt",
+            "args": [
+                "-c",
+                "src/main/java/com/infinitydreamers/test.json"
+            ]
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
@@ -15,11 +26,7 @@
             "name": "Test",
             "request": "launch",
             "mainClass": "com.infinitydreamers.Test",
-            "projectName": "mqtt",
-            "args": [
-                "-c",
-                "src/main/java/com/infinitydreamers/test.json"
-            ]
+            "projectName": "mqtt"
         }
     ]
 }

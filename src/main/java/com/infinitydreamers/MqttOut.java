@@ -6,6 +6,7 @@ import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONObject;
 
 public class MqttOut extends InputOutputNode {
 
@@ -17,12 +18,10 @@ public class MqttOut extends InputOutputNode {
             try (IMqttClient client = new MqttClient("tcp://localhost", publisherId)) {
                 client.connect();
                 Message message = getInputWire(0).get();
-
-                if (message.isFlag() && message.getJson().has("topic")) {
+                if (message.hasJson() && message.isFlag() && message.getJson().has("topic")) {
                     message.setFlag(true);
                     String topic = message.getJson().get("topic").toString();
                     String data = message.getJson().get("payload").toString();
-
                     output(message);
 
                     client.publish(topic, new MqttMessage(data.getBytes()));

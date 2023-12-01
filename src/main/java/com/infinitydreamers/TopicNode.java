@@ -15,7 +15,7 @@ public class TopicNode extends InputOutputNode {
             if (message.isFlag()) {
                 StringBuilder commonTopic = new StringBuilder("data");
 
-                JSONObject data = message.getJson();
+                JSONObject data = new JSONObject(message.getJson().get("payload").toString());
                 JSONObject info = (JSONObject) data.get("deviceInfo");
 
                 Iterator<String> i = info.keys();
@@ -41,7 +41,7 @@ public class TopicNode extends InputOutputNode {
                 }
 
                 message.setFlag(true);
-                message.setData(commonTopic.toString());
+                message.put("topic", commonTopic.toString());
 
                 output(message);
             }
