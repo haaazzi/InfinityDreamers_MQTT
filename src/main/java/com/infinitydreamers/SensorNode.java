@@ -56,7 +56,10 @@ public class SensorNode extends InputOutputNode {
                 }
             }
         } else {
-            output(new Message());
+            Message fail = new Message();
+            fail.put("fail", "Sensor not found");
+            fail.setFlag(false);
+            output(fail);
         }
     }
 }

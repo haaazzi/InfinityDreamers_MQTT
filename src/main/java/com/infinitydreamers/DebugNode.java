@@ -4,8 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DebugNode extends InputOutputNode {
-    int successCount = 0;
-    int failCount = 0;
 
     public DebugNode(String name) {
         super(name);
@@ -15,12 +13,18 @@ public class DebugNode extends InputOutputNode {
     void process() {
         if ((getInputWire(0) != null) && getInputWire(0).hasMessage()) {
             Message message = getInputWire(0).get();
+            String failString = "";
             if (message.isFlag()) {
                 successCount++;
+
+                log.debug("전체 : " + (successCount + failCount) + " / 성공 : " + successCount + " / 실패 : " + failCount);
             } else {
                 failCount++;
+                failString = message.getJson().getString("fail");
+
+                log.debug("전체 : " + (successCount + failCount) + " / 성공 : " + successCount + " / 실패 : " + failCount);
+                log.debug(failString);
             }
-            log.debug("전체 : " + (successCount + failCount) + " / 성공 : " + successCount + " / 실패 : " + failCount);
         }
     }
 }

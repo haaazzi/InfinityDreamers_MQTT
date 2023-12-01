@@ -7,8 +7,8 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 
 public class MqttIn extends InputOutputNode {
     Message message;
-    final String DEFAULT_TOPIC = "application/#";
-    final String DEFAULT_URI = "tcp://ems.nhnacademy.com:1883";
+    static final String DEFAULT_TOPIC = "application/#";
+    static final String DEFAULT_URI = "tcp://ems.nhnacademy.com:1883";
 
     public MqttIn(Message message) {
         this.message = message;
@@ -30,13 +30,16 @@ public class MqttIn extends InputOutputNode {
             }
 
             client.subscribe(topicFilter, (topic, msg) -> {
-                if (!topic.contains("will")) {
+                if (topic.contains("device")) {
                     message.setFlag(true);
                     message.setSensor(sensor);
                     message.put("payload", msg.toString());
                     output(message);
                 } else {
-                    message.setFlag(false);
+                    Message fail = new Message();
+                    fail.put("fail", "Topic does not contain device");
+                    fail.setFlag(false);
+                    output(fail);
                 }
             });
 

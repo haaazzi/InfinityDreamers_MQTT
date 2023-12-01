@@ -10,7 +10,6 @@ public class DeviceInfoNode extends InputOutputNode {
         String objectString = "object";
         if ((getInputWire(0) != null) && getInputWire(0).hasMessage()) {
             Message message = getInputWire(0).get();
-
             if (message.isFlag()) {
                 JSONObject json = new JSONObject(message.getJson().get("payload").toString());
 
@@ -26,7 +25,10 @@ public class DeviceInfoNode extends InputOutputNode {
                     message.setFlag(true);
                     output(message);
                 } else {
-                    output(new Message());
+                    Message fail = new Message();
+                    fail.put("fail", "DeviceInfo not found");
+                    fail.setFlag(false);
+                    output(fail);
                 }
             }
         }

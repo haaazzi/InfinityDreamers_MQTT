@@ -34,7 +34,7 @@ public class Message {
     }
 
     public boolean isFlag() {
-        return json.has("flag");
+        return Boolean.parseBoolean(json.getString("flag"));
     }
 
     public boolean hasJson() {
