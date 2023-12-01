@@ -30,12 +30,23 @@ public abstract class ActiveNode extends Node implements Runnable {
 
     }
 
+    void postprocess() {
+
+    }
+
     @Override
     public void run() {
         preprocess();
         while (thread.isAlive()) {
             process();
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
+        postprocess();
+
     }
 
 }

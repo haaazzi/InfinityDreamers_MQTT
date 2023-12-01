@@ -9,18 +9,19 @@ public class MqttIn extends InputOutputNode {
     Message message;
     static final String DEFAULT_TOPIC = "application/#";
     static final String DEFAULT_URI = "tcp://ems.nhnacademy.com:1883";
+    IMqttClient client;
 
     public MqttIn(Message message) {
         this.message = message;
     }
 
     @Override
-    void process() {
+    void preprocess() {
         String publisherId = UUID.randomUUID().toString();
         String uri = message.getJson().has("uri") ? message.getJson().getString("uri") : DEFAULT_URI;
 
-        try (IMqttClient client = new MqttClient(uri, publisherId)) {
-
+        try {
+            client = new MqttClient(uri, publisherId);
             client.connect();
             String topicFilter = message.getJson().getString("topic");
             String sensor = message.getJson().has("sensor") ? message.getJson().getString("sensor") : null;
@@ -31,6 +32,7 @@ public class MqttIn extends InputOutputNode {
 
             client.subscribe(topicFilter, (topic, msg) -> {
                 if (topic.contains("device")) {
+                    message = new Message();
                     message.setFlag(true);
                     message.setSensor(sensor);
                     message.put("payload", msg.toString());
@@ -43,16 +45,21 @@ public class MqttIn extends InputOutputNode {
                 }
             });
 
-            while (!Thread.currentThread().isInterrupted()) {
-                Thread.sleep(100);
-            }
-
-            client.disconnect();
-
         } catch (MqttException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        }
+    }
+
+    @Override
+    void process() {
+    }
+
+    @Override
+    void postprocess() {
+        try {
+            client.disconnect();
+        } catch (MqttException e) {
+            e.printStackTrace();
         }
     }
 }
