@@ -27,44 +27,54 @@ public class Main {
             String filePath = "";
             Message message = new Message();
 
-            if (commandLine.hasOption("an")) {
+            if (commandLine.hasOption("an")) {                
                 topicFilter = commandLine.getOptionValue("an");
+                message.put("inputTopic", topicFilter);
+
             } else if (commandLine.hasOption("s")) {
                 sensor = commandLine.getOptionValue("s");
                 message.setSensor(sensor);
+
             } else if (commandLine.hasOption("c")) {
                 filePath = commandLine.getOptionValue("c");
                 JSONParser jsonParser = new JSONParser();
                 Object obj = jsonParser.parse(new FileReader("./" + filePath));
                 JSONObject jsonObject = (JSONObject) obj;
+                
+                if(jsonObject.containsKey("uri")){
+                    message.put("uri", jsonObject.get("uri").toString());
+                }
 
-                topicFilter = (String) jsonObject.get("name");
-                sensor = (String) jsonObject.get("sensor");
+                if (jsonObject.containsKey("inputTopic")) {
+                    message.put("inputTopic", (String) jsonObject.get("inputTopic"));
+                }
 
-                message.put("topic", topicFilter);
-                message.setSensor(sensor);
+                if (jsonObject.containsKey("sensor")) {
+                    message.setSensor((String) jsonObject.get("sensor"));
+                }
+
+                if (jsonObject.containsKey("outputTopic")) {
+                    message.put("outputTopic", jsonObject.get("outputTopic").toString());
+                }
+
             }
 
             MqttIn in = new MqttIn(message);
-            // JsonNode json = new JsonNode();
             DeviceInfoNode deviceInfo = new DeviceInfoNode();
             TopicNode topicNode = new TopicNode();
             SensorNode sensorNode = new SensorNode();
             MqttOut out = new MqttOut();
             DebugNode debugNode1 = new DebugNode("MqttIn");
-            // DebugNode debugNode2 = new DebugNode("JsonNode");
             DebugNode debugNode3 = new DebugNode("DeviceNode");
             DebugNode debugNode4 = new DebugNode("TopicNode");
             DebugNode debugNode5 = new DebugNode("SensorNode");
             DebugNode debugNode6 = new DebugNode("MqttOut");
 
-            Wire wire1 = new Wire();
             Wire wire2 = new Wire();
             Wire wire3 = new Wire();
             Wire wire4 = new Wire();
             Wire wire5 = new Wire();
 
-            Wire debugWire1 = new Wire();
             Wire debugWire2 = new Wire();
             Wire debugWire3 = new Wire();
             Wire debugWire4 = new Wire();
@@ -74,11 +84,6 @@ public class Main {
             in.connectOutputWire(wire2);
             in.connectOutputWire(debugWire2);
             debugNode1.connectInputWire(debugWire2);
-
-            // json.connectInputWire(wire1);
-            // json.connectOutputWire(wire2);
-            // json.connectOutputWire(debugWire2);
-            // debugNode2.connectInputWire(debugWire2);
 
             deviceInfo.connectInputWire(wire2);
             deviceInfo.connectOutputWire(wire3);
@@ -100,19 +105,16 @@ public class Main {
             debugNode6.connectInputWire(debugWire6);
 
             in.start();
-            // json.start();
             deviceInfo.start();
             topicNode.start();
             sensorNode.start();
             out.start();
             debugNode1.start();
-            // debugNode2.start();
             debugNode3.start();
             debugNode4.start();
             debugNode5.start();
             debugNode6.start();
         } catch (ParseException | IOException | org.json.simple.parser.ParseException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
