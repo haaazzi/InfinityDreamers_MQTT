@@ -6,6 +6,8 @@ import java.util.List;
 public class InputOutputNode extends ActiveNode {
     List<Wire> inputWires;
     List<Wire> outputWires;
+    int successCount = 0;
+    int failCount = 0;
 
     public InputOutputNode(String name) {
         super(name);

@@ -6,7 +6,6 @@ import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.JSONObject;
 
 public class MqttOut extends InputOutputNode {
 
@@ -28,7 +27,10 @@ public class MqttOut extends InputOutputNode {
 
                     client.disconnect();
                 } else {
-                    output(new Message());
+                    Message fail = new Message();
+                    fail.put("fail", "Out failed");
+                    fail.setFlag(false);
+                    output(fail);
                 }
             } catch (MqttException e) {
                 e.printStackTrace();
