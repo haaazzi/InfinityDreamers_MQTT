@@ -22,7 +22,7 @@ public class SensorNode extends InputOutputNode {
 
         if (data.has("object")) {
             JSONObject object = (JSONObject) data.get("object");
-            String commonTopic = message.getJson().getString("topic");
+            String commonTopic = message.getJson().getString("outputTopic");
             String sensor = message.getJson().has("sensor") ? message.getJson().getString("sensor") : null;
             JSONObject payload = null;
             Message newMessage = null;
@@ -31,7 +31,7 @@ public class SensorNode extends InputOutputNode {
                     newMessage = new Message();
                     payload = new JSONObject();
 
-                    newMessage.put("topic", commonTopic + "/e/" + key);
+                    newMessage.put("outputTopic", commonTopic + "/e/" + key);
                     payload.put("time", System.currentTimeMillis());
                     payload.put("value", object.get(key));
 
@@ -45,7 +45,7 @@ public class SensorNode extends InputOutputNode {
                     newMessage = new Message();
                     payload = new JSONObject();
 
-                    newMessage.put("topic", commonTopic + "/e/" + key);
+                    newMessage.put("outputTopic", commonTopic + "/e/" + key);
                     payload.put("time", System.currentTimeMillis());
                     payload.put("value", object.get(key));
 

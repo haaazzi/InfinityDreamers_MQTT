@@ -23,16 +23,12 @@ public class MqttIn extends InputOutputNode {
         try {
             client = new MqttClient(uri, publisherId);
             client.connect();
-            String topicFilter = message.getJson().getString("topic");
+            String topicFilter = message.getJson().has("inputTopic") ? message.getJson().getString("inputTopic") : DEFAULT_TOPIC;
             String sensor = message.getJson().has("sensor") ? message.getJson().getString("sensor") : null;
-
-            if (topicFilter.equals("")) {
-                topicFilter = DEFAULT_TOPIC;
-            }
-
+            
             client.subscribe(topicFilter, (topic, msg) -> {
                 if (topic.contains("device")) {
-                    message = new Message();
+                    // message = new Message();
                     message.setFlag(true);
                     message.setSensor(sensor);
                     message.put("payload", msg.toString());
@@ -48,10 +44,6 @@ public class MqttIn extends InputOutputNode {
         } catch (MqttException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    void process() {
     }
 
     @Override
