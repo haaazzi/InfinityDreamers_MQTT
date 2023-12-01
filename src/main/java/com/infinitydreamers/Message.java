@@ -4,52 +4,40 @@ import org.json.JSONObject;
 
 public class Message {
     JSONObject json;
-    String data;
-    String sensor;
-    boolean flag = false;
 
     Message() {
-        this("");
+        this(new JSONObject());
     }
 
     Message(JSONObject json) {
         this.json = json;
     }
 
-    Message(String data) {
-        this.data = data;
+    public void put(String key, String value) {
+        json.put(key, value);
+    }
+
+    public void setSensor(String sensor) {
+        put("sensor", sensor);
+    }
+
+    public void setFlag(boolean flag) {
+        put("flag", String.valueOf(flag));
     }
 
     public JSONObject getJson() {
         return json;
     }
 
-    public String getData() {
-        return data;
-    }
-
-    public String getSensor() {
-        return sensor;
-    }
-
     public void setJson(JSONObject json) {
         this.json = json;
     }
 
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public void setSensor(String sensor) {
-        this.sensor = sensor;
-    }
-
     public boolean isFlag() {
-        return flag;
+        return json.has("flag");
     }
 
-    public void setFlag(boolean flag) {
-        this.flag = flag;
+    public boolean hasJson() {
+        return json != null;
     }
-
 }
