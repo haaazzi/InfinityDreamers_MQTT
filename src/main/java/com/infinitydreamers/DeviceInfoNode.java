@@ -13,7 +13,7 @@ public class DeviceInfoNode extends InputOutputNode {
             if (message.isFlag()) {
                 JSONObject json = new JSONObject(message.getJson().get("payload").toString());
 
-                if (json.has(deviceInfoString) && json.has(objectString) && json.has(deviceInfoString)) {
+                if (json.has(deviceInfoString) && json.has(objectString)) {
                     JSONObject newJson = new JSONObject();
                     JSONObject deviceInfo = (JSONObject) ((JSONObject) json.get(deviceInfoString)).get("tags");
 

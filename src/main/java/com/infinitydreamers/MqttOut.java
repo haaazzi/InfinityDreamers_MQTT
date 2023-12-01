@@ -17,9 +17,9 @@ public class MqttOut extends InputOutputNode {
             try (IMqttClient client = new MqttClient("tcp://localhost", publisherId)) {
                 client.connect();
                 Message message = getInputWire(0).get();
-                if (message.hasJson() && message.isFlag() && message.getJson().has("topic")) {
+                if (message.hasJson() && message.isFlag() && message.getJson().has("outputTopic")) {
                     message.setFlag(true);
-                    String topic = message.getJson().get("topic").toString();
+                    String topic = message.getJson().get("outputTopic").toString();
                     String data = message.getJson().get("payload").toString();
                     output(message);
 
