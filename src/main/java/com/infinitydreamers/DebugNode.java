@@ -13,6 +13,7 @@ public class DebugNode extends InputOutputNode {
     void process() {
         if ((getInputWire(0) != null) && getInputWire(0).hasMessage()) {
             Message message = getInputWire(0).get();
+            System.out.println(message);
             String failString = "";
             if (message.isFlag()) {
                 successCount++;
