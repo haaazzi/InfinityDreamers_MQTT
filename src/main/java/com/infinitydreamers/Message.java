@@ -10,7 +10,7 @@ public class Message {
     }
 
     Message(JSONObject json) {
-        this.json = json;
+        this.json = new JSONObject(json.toString());
     }
 
     public void put(String key, String value) {

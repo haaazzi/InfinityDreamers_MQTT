@@ -20,9 +20,8 @@ public class TopicNode extends InputOutputNode {
 
                 if (message.getJson().has("outputTopic")) {
                     commonTopic = new StringBuilder("data");
-                    System.out.println(message.getJson().toString(4));
                     for (String key : message.getJson().getString("outputTopic").split(",")) {
-                        commonTopic.append("/"+key.charAt(0)+"/"+info.get(key));
+                        commonTopic.append("/" + key.charAt(0) + "/" + info.get(key));
                     }
 
                 } else {
@@ -49,12 +48,11 @@ public class TopicNode extends InputOutputNode {
                         }
                     }
                 }
+                Message newMessage = new Message(message.getJson());
+                newMessage.setFlag(true);
+                newMessage.put("outputTopic", commonTopic.toString());
 
-                message.setFlag(true);
-                message.put("outputTopic", commonTopic.toString());
-                commonTopic.delete(0, commonTopic.length()-1);
-                
-                output(message);
+                output(newMessage);
             }
         }
     }
