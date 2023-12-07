@@ -17,9 +17,15 @@ public abstract class ActiveNode extends Node implements Runnable {
         super(name, id);
     }
 
-    public void start() {
+    public synchronized void start() {
         thread = new Thread(this, getName());
         thread.start();
+    }
+
+    public synchronized void stop() {
+        if (thread != null) {
+            thread.interrupt();
+        }
     }
 
     void preprocess() {
