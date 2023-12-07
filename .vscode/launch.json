@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ModbusMain",
+            "request": "launch",
+            "mainClass": "com.infinitydreamers.ModbusMain",
+            "projectName": "mqtt"
+        },
+        {
+            "type": "java",
             "name": "Main",
             "request": "launch",
             "mainClass": "com.infinitydreamers.Main",

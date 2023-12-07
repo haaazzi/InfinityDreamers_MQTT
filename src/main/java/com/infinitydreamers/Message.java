@@ -1,5 +1,7 @@
 package com.infinitydreamers;
 
+import java.util.UUID;
+
 import org.json.JSONObject;
 
 public class Message {
@@ -15,6 +17,10 @@ public class Message {
 
     public void put(String key, String value) {
         json.put(key, value);
+    }
+
+    public void setId(UUID id) {
+        put("Id", id.toString());
     }
 
     public void setSensor(String sensor) {
