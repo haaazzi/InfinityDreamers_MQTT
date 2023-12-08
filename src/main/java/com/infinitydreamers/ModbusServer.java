@@ -5,8 +5,6 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ModbusServer extends InputOutputNode {
+    static HashMap<Integer, Integer> map = new HashMap<>();
 
     /**
      * InnerModbusServer
@@ -84,11 +83,23 @@ public class ModbusServer extends InputOutputNode {
                     int length = inputStream.read(buffer);
                     callback.accept(buffer, length);
 
-                    // Response
-                    byte[] result = ModbusResponse.getResponse(buffer);
+                    // "[0, 6, 0, 0, 0, 15, 1, 16, 0, 0, 0, 4, 8, 0, 1, 0, 2, 0, 3, 0, 4]"
+                    // "data/b/gyeongnam/p/class_a/s/nhnacademy/e/temperature/v/36.5"
 
-                    outputStream.write(result);
-                    outputStream.flush();
+                    if (length > 0) {
+                        String data = new String(Arrays.copyOfRange(buffer, 0, length));
+                        if (data.contains("data")) {
+                            int index = data.indexOf("v/");
+                            int value = (int) ((Double.parseDouble(data.substring(index + 2, data.length()))) * 10);
+                            map.put(100, value);
+                        } else {
+                            // Response
+                            byte[] result = ModbusResponse.getResponse(buffer);
+                            System.out.println(Arrays.toString(Arrays.copyOfRange(buffer, 0, 15)));
+                            outputStream.write(result);
+                            outputStream.flush();
+                        }
+                    }
                     Thread.sleep(1000);
                 }
 
@@ -164,7 +175,6 @@ public class ModbusServer extends InputOutputNode {
                     message.put("data", Arrays.toString(Arrays.copyOfRange(data, 0, length)));
                     message.put("length", length.toString());
                     output(message);
-                    System.out.println(message.getJson().toString(4));
                 }
             });
 
